@@ -1,0 +1,8 @@
+#!/bin/bash
+hosts="carcore ashcore carrash ashrash carblob ashblob carbean ashbean carpats ashpats cardart ashdart carvibe ashvibe carroam ashroam caract ashact carpore1 carpoem1 carpoem2 carpoem3 carpoem4 carbrace ashbrace ashntf psxntf nom2otf ashxtf"
+for i in $hosts; do
+        ssh -q $i <<here
+hostname
+ping -c 2 $1
+here
+done
