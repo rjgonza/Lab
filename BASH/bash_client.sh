@@ -2,7 +2,7 @@
 
 until [ -p msg_stream ]; do
 	sleep 1
-	cat msg_stream
-	echo "Client: Recieved GO event" > msg_stream
 done
-	
+cat msg_stream
+echo "Sending a recieved event message to the stream"
+echo "Client: Recieved GO event" > msg_stream	
