@@ -1,0 +1,16 @@
+#!/bin/bash
+
+count=0
+for i in $(seq 1 101); do
+	echo $count
+	if [[ $((count % 3 )) -eq 0 && $((count % 5)) -eq 0 ]]; then
+		echo "FizzBuzz"
+	elif [[ $((count % 3 )) -eq 0 ]]; then
+		echo "Fizz"
+	elif [[ $((count % 5 )) -eq 0 ]]; then
+		echo "Buzz"
+	else
+		echo "$count"
+	fi
+	count=$((count+1))
+done
