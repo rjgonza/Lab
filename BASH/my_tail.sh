@@ -1,15 +1,27 @@
 #!/bin/bash
+show_help() {
+	cat <<here
+	echo "Pass a file"
+here
+exit 1
+}
 
-# DO TO: need to support flags
+count=10
 
-# DO TO: need to check operand
-file=$1
+while getopts "?hl:" opt; do
+	case "$opt" in
+		h|\?)   show_help
+			;;
+		l)	count=$OPTARG
+	esac
+done
+file=$(eval echo '$'"$#")
+[[ -e $file ]] || show_help
+end_of_file=$(wc -l $file | awk '{print $1}')
 
-end=$(wc -l $1 | awk '{print $1}')
-length=10
-[[ $end -lt 10 ]] && start=1 || start=$(($end-$length))
-count=1
+[[ $end_of_file -lt 10 ]] && start=1 || start=$(($end_of_file-$count))
+counter=1
 while IFS= read -r line; do 
-	((count++))
-	[[ $count -ge $start ]] && printf "%s\n" "$line"
+	[[ $counter -gt $start ]] && printf "%s\n" "$line"
+	((counter++))
 done < $file
