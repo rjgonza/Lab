@@ -29,5 +29,24 @@ def test_parse_object():
 	assert_raises(parser.ParserError, parser.parse_object, test_list)
 
 def test_parse_subject():
-	test_list=[('verb', 'kill'), ('stop', 'the'), ('noun', 'princess')]
-	assert_equal(parser.parse_subject(test_list, ('noun', 'princess')), object)
+	test_list=[('verb', 'kill'), ('stop', 'the'), ('noun', 'bear')]
+	test_object=parser.parse_subject(test_list, ('noun', 'princess'))
+	assert_equal(test_object.subject, 'princess')
+	assert_equal(test_object.verb, 'kill')
+	assert_equal(test_object.object, 'bear')
+
+def test_parse_sentence():
+	test_list=[('noun', 'princess'), ('verb', 'kill'), ('stop', 'the'), ('noun', 'bear')]
+	test_object=parser.parse_sentence(test_list)
+	assert_equal(test_object.subject, 'princess')
+	assert_equal(test_object.verb, 'kill')
+	assert_equal(test_object.object, 'bear')
+	assert_raises=(parser.ParserError, parser.parse_sentence,test_list)
+	
+def test_parse_sentence_player():
+	test_list=[('verb', 'kill'), ('stop', 'the'), ('noun', 'bear')]
+	test_object=parser.parse_sentence(test_list)
+	assert_equal(test_object.subject, 'player')
+	assert_equal(test_object.verb, 'kill')
+	assert_equal(test_object.object, 'bear')
+	assert_raises=(parser.ParserError, parser.parse_sentence,test_list)
