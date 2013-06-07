@@ -1,0 +1,11 @@
+"Turn on pathogen
+execute pathogen#infect()
+
+filetype plugin indent on
+syntax enable
+syntax on
+
+"Used the solarized(dark) theme
+"let g:solarized_termcolors=256
+set background=dark
+colorscheme solarized
