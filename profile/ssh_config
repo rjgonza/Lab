@@ -1,0 +1,6 @@
+Host *
+ControlMaster auto
+ControlPath /tmp/%r@%h:%p
+
+Host demo
+User iexuser
