@@ -1,18 +1,17 @@
 #!/bin/bash
 
-#BAD_FILES=()
-
 get_files() {
 	FILE_LOCATION=""
+	FILE_DESTINATION=""
 	cd $FILE_LOCATION
 	echo "Checking the files that have been downloaded for viruses, if they are clean they will be copied over" | tee logger
 	for file in $(ls); do
 		scan_file $file
 		if [[ $? -ne 0 ]]; then
-			#BAD_FILES=( ${BAD_FILES[@]} $file )
-			echo "File: $file
+			echo "File: $file did not pass the virus check, it will not be copied" | tee logger
 		else
-			copy_file $file
+			echo "File: $file passed" | tee logger
+			cp $file $FILE_DESTINATION
 		fi
 	done
 }
@@ -26,10 +25,6 @@ scan_file() {
 		echo "Scanned $1 and it is infected" | tee logger
 		return 1
 		fi
-}
-
-copy_file() {
-	
 }
 
 check_mount() {
