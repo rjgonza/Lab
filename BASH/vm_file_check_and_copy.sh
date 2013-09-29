@@ -1,8 +1,11 @@
 #!/bin/bash
 
+FILE_LOCATION="/home/rgonzalez/Downloads"
+FILE_DESTINATION="/mnt/portal/INCOMMING"
+SCAN_COMMAND="clamscan"
+SHARE_NAME="Donwloads"
+
 get_files() {
-	FILE_LOCATION=""
-	FILE_DESTINATION=""
 	cd $FILE_LOCATION
 	echo "Checking the files that have been downloaded for viruses, if they are clean they will be copied over" | tee logger
 	for file in $(ls); do
@@ -17,7 +20,6 @@ get_files() {
 }
 
 scan_file() {
-	SCAN_COMMAND=""
 	if [[ $SCAN_COMMAND $1 ]]; then
 		echo "Scanned $1 and it is clean!" | tee logger
 		return 0
@@ -28,9 +30,20 @@ scan_file() {
 }
 
 check_mount() {
+	mount | grep -q vboxsf | grep -q ${FILE_DESTINATION}
+	if [[ $? -eq 0 ]]; then
+		echo "Found the mount" | tee logger
+		return 0
+	else
+		echo "Need to mount the share" | tee logger
+		return 1
+	fi
+	
 }
 
 mount_shared_drive(){
+	mount -t vboxfs $SHARE_NAME $FILE_DESTINATION
+	[[ $? -eq 0 ]] && echo "Mounting was successful" | tee logger
 }
 
 check_mount
