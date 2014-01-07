@@ -1,4 +1,6 @@
 #!/bin/bash
-pre=:
-post=:
+#pre=:
+pre="<var>"
+#post=:
+post="</var>"
 printf "$pre%s$post\n" "$@"

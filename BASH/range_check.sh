@@ -1,5 +1,5 @@
 #!/bin/bash
-read -p "Enter a number between ${1:-10} and ${2:-20}: " input
+read -p "Enter a number between (not including including) ${1:-10} and ${2:-20}: " input
 if [[ $input -gt ${1:-10} && $input -lt ${2:-20} ]]; then
 	echo "Success! You entered $input"
 else
