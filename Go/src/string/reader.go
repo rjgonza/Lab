@@ -1,0 +1,5 @@
+import fmt
+
+package main() {
+	
+}
