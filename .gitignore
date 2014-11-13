@@ -5,8 +5,11 @@
 *.dll
 *.exe
 *.o
+*.a
 *.so
 *pyc
+*.c
+*.go
 
 # Packages #
 ############
@@ -34,6 +37,8 @@
 ehthumbs.db
 Icon?
 Thumbs.db
+_obj
+_test
 
 # IDE generated files #
 #######################
