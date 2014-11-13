@@ -9,7 +9,8 @@
 *.so
 *pyc
 *.c
-*.go
+*.cgo*.go
+*.cgo*.c
 
 # Packages #
 ############
