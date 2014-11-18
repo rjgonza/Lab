@@ -19,8 +19,13 @@ func main() {
         usage()
     }
 
-    var barPtr = flag.Bool("bar", false, "Print a border around the numbers using the _ character")
-    var starPtr = flag.Bool("star", false, "Print a border around the numbers using the * character")
+    var barPtr *bool
+    var starPtr *bool
+
+    barPtr = flag.Bool("bar", false, "Print a border around the numbers using the _ character")
+    barPtr = flag.Bool("b", false, "Print a border around the numbers using the _ character")
+    starPtr = flag.Bool("star", false, "Print a border around the numbers using the * character")
+    starPtr = flag.Bool("s", false, "Print a border around the numbers using the * character")
 
     flag.Parse()
 
