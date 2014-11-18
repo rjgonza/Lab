@@ -9,9 +9,26 @@ import (
     "strings"
 )
 
+var barPtr bool
+var starPtr bool
+
 func usage() {
-    fmt.Printf("usage: %s <whole-number> [-bar] [-star]\n", filepath.Base(os.Args[0]))
+    fmt.Printf("usage: %s [-b|-bar] [-s|-star] <whole-number>\n", filepath.Base(os.Args[0]))
     os.Exit(1)
+}
+
+func init() {
+    flag.BoolVar(&barPtr, "bar", false, "Print a border around the numbers using the _ character")
+    flag.BoolVar(&barPtr, "b", false, "Print a border around the numbers using the _ character")
+    flag.BoolVar(&starPtr, "star", false, "Print a border around the numbers using the * character")
+    flag.BoolVar(&starPtr, "s", false, "Print a border around the numbers using the * character")
+
+    flag.Parse()
+
+    if barPtr && starPtr {
+        fmt.Print("Cannot choose both a * and _ for the border\n")
+        usage()
+    }
 }
 
 func main() {
@@ -19,29 +36,14 @@ func main() {
         usage()
     }
 
-    var barPtr *bool
-    var starPtr *bool
+    var border string
 
-    barPtr = flag.Bool("bar", false, "Print a border around the numbers using the _ character")
-    barPtr = flag.Bool("b", false, "Print a border around the numbers using the _ character")
-    starPtr = flag.Bool("star", false, "Print a border around the numbers using the * character")
-    starPtr = flag.Bool("s", false, "Print a border around the numbers using the * character")
-
-    flag.Parse()
-
-    if *barPtr && *starPtr {
-        fmt.Print("Cannot choose both a * and _ for the border\n")
-        usage()
-    }
-
-    var boarder string
-
-    if *barPtr {
-        boarder = "_"
-    } else if *starPtr {
-        boarder = "*"
+    if barPtr {
+        border = "_"
+    } else if starPtr {
+        border = "*"
     } else {
-        boarder = ""
+        border = ""
     }
 
     stringOfDigits := os.Args[len(os.Args) - 1]
@@ -56,11 +58,11 @@ func main() {
             }
         }
         if row == 0 {
-            fmt.Println(strings.Repeat(boarder, len(line)))
+            fmt.Println(strings.Repeat(border, len(line)))
         }
         fmt.Println(line)
         if row + 1 == len(bigDigits[0]){
-            fmt.Println(strings.Repeat(boarder, len(line)))
+            fmt.Println(strings.Repeat(border, len(line)))
         }
     }
 }
