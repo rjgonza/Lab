@@ -91,7 +91,7 @@ func getStats(numbers []float64) (stats statistics) {
 	sort.Float64s(stats.numbers)
 	stats.mean = sum(numbers) / float64(len(numbers))
 	stats.median = median(numbers)
-	stats.mode = mode(number)
+	stats.modes = modes(number)
 	stats.stddev = stddev(numbers)
 	
 	return stats
@@ -113,7 +113,7 @@ func median(numbers []float64) float64 {
 	return result
 }
 
-func mode(numbers []float64) float64 {
+func modes(numbers []float64) float64 {
 	var previous, mode float64
 	var previous_count int
 	for i, num := range numbers {
