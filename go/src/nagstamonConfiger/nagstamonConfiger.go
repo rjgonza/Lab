@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -27,19 +28,27 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// fmt.Printf("Found the config dir: %s\n", configDir)
-	// files, err := ioutil.ReadDir(configDir)
-	// if err != nil {
-	// 	log.Fatal(nil)
-	// }
-	// fmt.Printf("Current files in the %s dir:\n", configDir)
-	// for _, file := range files {
-	// 	fmt.Println(file.Name())
-	// }
-
+	var newNagstamonConfigsSource = path.Join(usr.HomeDir, "repos", "IEX", "sre-nagios")
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Would you like to backup the current configs? [Y/N]:")
+	fmt.Printf("Location of NEW nagstamon configs (Default %s):", newNagstamonConfigsSource)
 	answer, _ := reader.ReadString('\n')
+	fmt.Printf("Answer: '%s'", answer)
+	if answer != "\n" {
+		newNagstamonConfigsSource = answer
+	}
+	for _, conf := range nagstamonConfigs {
+		fmt.Printf("Going to use %s from %s", conf, newNagstamonConfigsSource)
+	}
+
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
+
+	reader = bufio.NewReader(os.Stdin)
+	fmt.Print("Would you like to backup the current configs? [Y/N]:")
+	answer, _ = reader.ReadString('\n')
 	if strings.Contains(answer, "Y") || strings.Contains(answer, "y") {
 		backup = true
 	}
