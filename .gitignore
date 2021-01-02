@@ -41,6 +41,7 @@ Icon?
 Thumbs.db
 _obj
 _test
+*.lock
 
 # IDE generated files #
 #######################
