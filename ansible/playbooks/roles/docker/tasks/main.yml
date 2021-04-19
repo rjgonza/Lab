@@ -21,6 +21,16 @@
     name: docker
     state: latest
 
+- name: Update dockerd to bind to all addresses
+  become: yes
+  lineinfile:
+    dest: /lib/systemd/system/docker.service
+    line: "ExecStart=/usr/bin/dockerd-current -H=tcp://0.0.0.0:4243 \\"
+    regexp: "^ExecStart=/usr/bin/dockerd-current "
+  notify:
+    - reload systemd
+    - restart docker
+
 - name: Start and enable the Docker daemon
   become: yes
   service:
