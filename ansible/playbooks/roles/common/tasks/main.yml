@@ -1,5 +1,6 @@
 ---
-- name: Install packages
+- name: Intall packages
+  tags: packages
   become: yes
   yum:
     name: "{{item}}"
@@ -7,3 +8,11 @@
   loop:
     - vim
     - tmux
+
+- name: Make sure firewall is NOT running
+  tags: firewall
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: ansible_distribution == "Centos"
