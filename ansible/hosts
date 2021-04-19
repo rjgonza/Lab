@@ -1,2 +1,11 @@
-worker1
-worker2
+worker1 ansible_host=192.168.119.11
+worker2 ansible_host=192.168.119.12
+
+rp1 ansible_host=192.168.119.21
+rp2 ansible_host=192.168.119.22
+rp3 ansible_host=192.168.119.23
+rp4 ansible_host=192.168.119.24
+rp5 ansible_host=192.168.119.25
+
+[pi_workers]
+rp[1:5]
