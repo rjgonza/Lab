@@ -1,0 +1,26 @@
+---
+dnsmasq_domain_needed: true
+dnsmasq_bogus_priv: true
+dnsmasq_expand_hosts: true
+
+dnsmasq_local: /expo/
+
+dnsmasq_upstream_servers:
+  - 9.9.9.9
+  - 1.1.1.1
+
+hosts:
+  - host: worker1.expo worker1
+    ip: 192.168.119.11
+  - host: worker2.expo worker2
+    ip: 192.168.119.12
+  - host: rp1.expo rp1
+    ip: 192.168.119.21
+  - host: rp2.expo rp2
+    ip: 192.168.119.22
+  - host: rp3.expo rp3
+    ip: 192.168.119.23
+  - host: rp4.expo rp4
+    ip: 192.168.119.24
+  - host: rp5.expo rp5
+    ip: 192.168.119.25

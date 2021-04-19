@@ -1,0 +1,42 @@
+# {{ ansible_managed }}
+
+{% if dnsmasq_domain_needed | default(false) %}
+domain-needed
+{% endif %}
+
+cache-size={{ dnsmasq_cache_size | default("5000") }}
+
+{% if dnsmasq_domain is defined %}
+domain={{ dnsmasq_domain }}
+{% endif %}
+{% if dnsmasq_bogus_priv | default(false) %}
+bogus-priv
+{% endif %}
+
+{% if dnsmasq_log_queries | default(false) %}
+log-queries
+{% endif %}
+
+{% if dnsmasq_expand_hosts | default(false) %}
+expand-hosts
+{% endif %}
+
+{% if dnsmasq_local is defined %}
+local={{ dnsmasq_local }}
+{% endif %}
+
+{% if dnsmasq_upstream_servers is defined %}
+{% if dnsmasq_upstream_servers is iterable %}
+{% for host in dnsmasq_upstream_servers %}
+server={{ host }}
+{% endfor %}
+{% else %}
+server={{ dnsmasq_upstream_servers }}
+{% endif %}
+{% endif %}
+
+{% if dnsmasq_conf_dir is defined %}
+conf-dir={{ dnsmasq_conf_dir }}
+{% else %}
+conf-dir=/etc/dnsmasq.d
+{% endif %}

@@ -1,0 +1,25 @@
+---
+- name: Install dnsmasq package
+  package:
+    name: dnsmasq
+    state: present
+
+- name: Deploy dnsmasq config
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    validate: "dnsmasq --test --conf-file=%s"
+  notify: restart dnsmasq
+
+- name: Update hosts file
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ item.ip }}    {{ item.host }}"
+    regexp: "^{{ item.ip }}"
+  loop: "{{ hosts }}"
+
+- name: Make sure Dnsmasq is running
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
