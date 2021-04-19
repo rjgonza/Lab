@@ -9,3 +9,7 @@ rp5 ansible_host=192.168.119.25
 
 [pi_workers]
 rp[1:5]
+
+[docker_workers]
+worker1
+worker2
