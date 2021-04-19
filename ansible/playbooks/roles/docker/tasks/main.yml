@@ -1,0 +1,29 @@
+---
+- name: Install packages
+  become: yes
+  yum:
+    name: "{{item}}"
+    state: latest
+  loop:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: Add Docker CE repo
+  become: yes
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker
+  become: yes
+  yum:
+    name: docker
+    state: latest
+
+- name: Start and enable the Docker daemon
+  become: yes
+  service:
+    name: docker
+    state: started
+    enabled: yes
