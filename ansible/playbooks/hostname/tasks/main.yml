@@ -7,5 +7,5 @@
 - name: Update hosts file to know the new hostname
   lineinfile:
     dest: /etc/hosts
-    line: "{{ 127.0.0.1 }}    {{ inventory_hostname }}"
-    regexp: "^{{ item.ip }}    {{ inventory_hostname }}$"
+    line: "127.0.0.1    {{ inventory_hostname }}"
+    regexp: "^127.0.0.1    {{ inventory_hostname }}$"
