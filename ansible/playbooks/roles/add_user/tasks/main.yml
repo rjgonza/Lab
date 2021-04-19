@@ -1,0 +1,21 @@
+- name: Make sure my users is on the host
+  become: yes
+  user:
+    name: ramon
+    comment: "Ramon Gonzalez"
+
+- name: Make sure to add my public key for ssh-key auth
+  become: yes
+  authorized_key:
+    user: ramon
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2dy1i+6iNAdFcPVNOG75KVMAM6J87Gnux1jtHJgFAFdbg3tySyWlWcXwwTHV7RRWOGhSpwY5Llqj5E29db2pG1RQ+Xb794ShN+3z+egMkAEbeX1wqG6WkkT35Wn8FJLLrbp6Bkv9QkJnsB87hJCfnmp9KNv5aj3eLlFx6W8y6vbn2JlE00AUnZbSvXOqo5bWDDWwESzw9u49VIm4EyqT1P5oJQBT/Ia/RDfhop5u4zuBxsRLo1W8KE/l7QtuazQWuVT+unj239t9be+HkIsBTTgdikIgnane6s7zd+4GKCYIdORDSptRzpkiLfBPGii0MpQ8QCm+AHAVguOEWqhM+w=="
+    state: present
+
+- name: Allow my user to have passwordless sudo
+  become: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^ramon"
+    line: "ramon ALL=(ALL) NOPASSWD: ALL"
+    validate: visudo -cf %s
