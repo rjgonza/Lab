@@ -13,3 +13,6 @@ rp[1:5]
 [docker_workers]
 worker1
 worker2
+
+[dns_servers]
+worker2

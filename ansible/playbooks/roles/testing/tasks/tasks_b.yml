@@ -1,0 +1,5 @@
+---
+- name: tasks_b - 1
+  tags: tags_b
+  debug:
+    msg: This is a test from the tasks_b tasks

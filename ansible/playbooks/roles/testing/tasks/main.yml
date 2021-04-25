@@ -1,0 +1,6 @@
+---
+- import_tasks: "{{ role_path }}/tasks/tasks_a.yml"
+  when: '"tags_a" in ansible_run_tags'
+
+- import_tasks: "{{ role_path }}/tasks/tasks_b.yml"
+  when: '"tags_b" in ansible_run_tags'
