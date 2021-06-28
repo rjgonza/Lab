@@ -14,6 +14,9 @@ fn main() {
     some_str_procedure(&string_var);
 
     some_string_procedures(string_var);
+
+    let f = last_char(String::from("Hello"));
+    println!("{}", f)
 }
 
 fn some_string_procedures(param: String) {
@@ -44,4 +47,11 @@ fn some_function(param_a: f32, param_b: i128) -> f32 {
         -1.
     }
     // 1 as f32 // 1. or 1_f32 or 1f32
+}
+
+fn last_char(string: String) -> char {
+    if string.is_empty() {
+        return 'p';
+    }
+    string.chars().next_back().unwrap()
 }
