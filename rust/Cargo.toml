@@ -1,0 +1,11 @@
+[workspace]
+
+members = [
+    "variables",
+    "hello-rust",
+    "guessing_game",
+    "functions",
+    "enum_example",
+    "structs",
+    "control_flow",
+]
