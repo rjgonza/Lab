@@ -8,4 +8,9 @@ members = [
     "enum_example",
     "structs",
     "control_flow",
+    "loops",
+    "errors",
+    "strings",
+    "collections",
+    "traits",
 ]
