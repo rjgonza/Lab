@@ -1,7 +1,7 @@
 worker1 ansible_host=192.168.119.11
 worker2 ansible_host=192.168.119.12
 
-rp1 ansible_host=192.168.119.21
+rp1 ansible_host=192.168.119.21 # Matrix Server
 rp2 ansible_host=192.168.119.22
 rp3 ansible_host=192.168.119.23
 rp4 ansible_host=192.168.119.24
@@ -15,4 +15,7 @@ worker1
 worker2
 
 [dns_servers]
-worker2
+rp1
+
+[matrix_servers]
+matrix.gonzalez.house ansible_host=100.1.66.17 ansible_ssh_user=root
