@@ -4,3 +4,4 @@
     - { role: common, tags: common }
     - { role: add_user, tags: add_user }
     - { role: hostname, tags: hostname }
+    - { role: update, tags: update }
