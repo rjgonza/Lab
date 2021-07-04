@@ -23,6 +23,7 @@ expand-hosts
 
 {% if dnsmasq_local is defined %}
 local={{ dnsmasq_local }}
+domain=lan
 {% endif %}
 
 {% if dnsmasq_upstream_servers is defined %}
@@ -39,4 +40,8 @@ server={{ dnsmasq_upstream_servers }}
 conf-dir={{ dnsmasq_conf_dir }}
 {% else %}
 conf-dir=/etc/dnsmasq.d
+{% endif %}
+
+{% if dnsmasq_listen_address is defined %}
+listen-address={{ dnsmasq_listen_address }}
 {% endif %}

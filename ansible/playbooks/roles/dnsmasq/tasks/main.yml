@@ -1,9 +1,9 @@
 ---
-- name: Install dnsmasq package
+- name: Install dnsmasq package or remove if server is in dns_servers group
   become: yes
   package:
     name: dnsmasq
-    state: present
+    state: "{{ dnsmasq_package_installed | default('absent') }}"
 
 - name: Deploy dnsmasq config
   become: yes
@@ -12,6 +12,7 @@
     dest: /etc/dnsmasq.conf
     validate: "dnsmasq --test --conf-file=%s"
   notify: restart dnsmasq
+  when: "'dns_servers' in group_names"
 
 - name: Update hosts file
   become: yes
@@ -20,10 +21,12 @@
     line: "{{ item.ip }}    {{ item.host }}"
     regexp: "^{{ item.ip }}"
   loop: "{{ hosts }}"
+  when: "'dns_servers' in group_names"
 
-- name: Make sure Dnsmasq is running
+- name: Make sure Dnsmasq is running only on the dns servers in the dns_servers group
   become: yes
   service:
     name: dnsmasq
     state: started
-    enabled: yes
+    enabled: "{{ service | default('no') }}"
+  when: "'dns_servers' in group_names"

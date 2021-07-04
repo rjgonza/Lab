@@ -24,3 +24,8 @@ hosts:
     ip: 192.168.119.24
   - host: rp5.expo rp5
     ip: 192.168.119.25
+
+dnsmasq_listen_address: 192.168.119.21 # RP1
+
+service: yes
+dnsmasq_package_installed: present
