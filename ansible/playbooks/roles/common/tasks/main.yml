@@ -16,3 +16,20 @@
     state: stopped
     enabled: no
   when: ansible_distribution == "Centos"
+
+- name: Check if pi users is present
+  ignore_errors: true
+  shell: /usr/bin/getent passwd | grep -w pi
+  register: pi_user
+  ignore_errors: true
+  when: ansible_distribution == "Debian"
+
+- name: If pi user exists update the password
+  become: yes
+  user:
+    name: pi
+    update_password: always
+    password: "{{ rp_pi_user_password|password_hash('sha512') }}"
+  when: 
+    - ansible_distribution == "Debian"
+    - pi_user.rc == 0
