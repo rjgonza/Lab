@@ -8,6 +8,7 @@
   loop:
     - vim
     - tmux
+    - nc
 
 - name: Make sure firewall is NOT running
   tags: firewall
