@@ -1,13 +1,13 @@
 ---
 - name: Update packages on Centos host
-  become: yes
+  become: True
   yum:
     name: "*"
     state: latest
-  when: ansible_distribution == "Centos"
+  when: ansible_distribution == "CentOS"
 
 - name: Update packages on Raspberry host
-  become: yes
+  become: True
   apt:
     upgrade: yes
     update_cache: yes
