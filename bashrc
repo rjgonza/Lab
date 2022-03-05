@@ -9,3 +9,6 @@ function slash_and_burn(){                                                      
         git branch -r | grep -q $i || git branch -d $i;                                                                                                                                                       │···························
     done                                                                                                                                                                                                      │···························
 }   
+
+# TODO: add ssh-agent function
+# TODO: setup role to deploy bash settings
