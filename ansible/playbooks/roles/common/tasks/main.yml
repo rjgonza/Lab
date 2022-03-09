@@ -34,3 +34,11 @@
   when: 
     - ansible_distribution == "Debian"
     - pi_user.rc == 0
+
+- name: Make sure the timezone is set to Easter on a pi
+  become: yes
+  tags: 
+    - common
+    - common_timezone
+  community.general.timezone:
+    name: US/Eastern
