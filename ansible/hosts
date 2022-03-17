@@ -1,9 +1,9 @@
 worker1 ansible_host=192.168.119.11
 worker2 ansible_host=192.168.119.12
 
-rp1 ansible_host=192.168.119.21 # PIHole Server
+rp1 ansible_host=192.168.119.21 # PiHole Server
 rp2 ansible_host=192.168.119.22 # Home Assistant
-rp3 ansible_host=192.168.119.23 # Free
+rp3 ansible_host=192.168.119.23 # OctoPrint | Wireguard VPN
 rp4 ansible_host=192.168.119.24 # Free
 rp5 ansible_host=192.168.119.25 # Free
 
@@ -16,6 +16,18 @@ worker2
 
 [dns_servers]
 rp1
+
+[pihole]
+rp1
+
+[ha]
+rp2
+
+[octoprint]
+rp3
+
+[wireguard]
+rp3
 
 [matrix_servers]
 matrix.gonzalez.house ansible_host=100.1.66.17 ansible_ssh_user=root
