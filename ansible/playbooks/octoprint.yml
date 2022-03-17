@@ -1,0 +1,19 @@
+- hosts: octoprint
+  become: true
+
+  tasks:
+    - name: Create a pip -> pip3 link
+      tags: pip_link
+      ansible.builtin.file:
+        src: /usr/bin/pip3
+        dest: /usr/bin/pip
+        state: link
+
+  vars:
+    install_octoprint: true
+    install_mjpg_streamer: true
+    webcam_type: custom
+    reset_config: false
+
+  roles:
+    - { role: semuadmin.octoprint, tags: octoprint }
