@@ -1,15 +1,15 @@
 ---
 - name: Update packages on Centos host
-  become: True
-  yum:
+  become: true
+  ansible.builtin.yum:
     name: "*"
     state: latest
   when: ansible_distribution == "CentOS"
 
 - name: Update packages on Raspberry host
-  become: True
-  apt:
-    upgrade: yes
-    update_cache: yes
+  become: true
+  ansible.builtin.apt:
+    upgrade: true
+    update_cache: true
     cache_valid_time: 86400
   when: ansible_distribution == "Debian"

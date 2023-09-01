@@ -1,5 +1,5 @@
 ---
-- name: Intall packages
+- name: Install packages
   tags: packages
   become: yes
   yum:
@@ -22,7 +22,6 @@
   ignore_errors: true
   shell: /usr/bin/getent passwd | grep -w pi
   register: pi_user
-  ignore_errors: true
   when: ansible_distribution == "Debian"
 
 - name: If pi user exists update the password
