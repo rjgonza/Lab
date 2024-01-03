@@ -1,0 +1,4 @@
+- name: Do the workstation!
+  hosts: localhost
+  roles:
+    - { role: workstation, tags: workstation }

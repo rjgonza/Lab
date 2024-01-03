@@ -1,0 +1,5 @@
+---
+- name: Running tasks for Ubuntu
+  tags: always
+  when: ansible_distribution == "Ubuntu"
+  include_tasks: ubuntu.yml

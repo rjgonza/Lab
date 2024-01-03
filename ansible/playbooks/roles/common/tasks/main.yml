@@ -1,8 +1,8 @@
 ---
 - name: Install packages
   tags: packages
-  become: yes
-  yum:
+  become: true
+  package:
     name: "{{item}}"
     state: latest
   loop:
@@ -25,18 +25,18 @@
   when: ansible_distribution == "Debian"
 
 - name: If pi user exists update the password
-  become: yes
+  become: true
   user:
     name: pi
     update_password: always
     password: "{{ rp_pi_user_password|password_hash('sha512') }}"
-  when: 
+  when:
     - ansible_distribution == "Debian"
     - pi_user.rc == 0
 
 - name: Make sure the timezone is set to Easter on a pi
-  become: yes
-  tags: 
+  become: true
+  tags:
     - common
     - common_timezone
   community.general.timezone:

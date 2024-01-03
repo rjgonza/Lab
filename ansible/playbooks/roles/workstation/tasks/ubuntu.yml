@@ -1,0 +1,121 @@
+---
+- name: Make sure my users is on the host
+  become: true
+  user:
+    name: "{{ workstation_user_name }}"
+    comment: "{{ workstation_user_comment }}"
+
+- name: Make sure to add my public key for ssh-key auth
+  become: true
+  authorized_key:
+    user: ramon
+    key: "{{ item }}"
+    state: present
+  loop: "{{ workstation_ssh_pub_keys }}"
+
+- name: Allow my user to have passwordless sudo
+  become: true
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^{{ workstation_user_name }}"
+    line: "{{ workstation_user_name }} ALL=(ALL) NOPASSWD: ALL"
+    validate: visudo -cf %s
+
+# - name: Install ansible galaxy collections
+#   community.general.ansible_galaxy_install:
+#     type: collection
+#     name:
+
+- name: Clone dotfile repo
+  ansible.builtin.git:
+    repo: "ssh://git@github.com/rjgonza/dotfiles.git"
+    dest: "/home/ramon/repos/dotfiles"
+    clone: true
+    update: true
+
+- name: Run stow
+  shell: "cd /home/ramon/repos/dotfiles; make install"
+  register: result
+  changed_when: 'result.stderr is search("LINK: ")'
+
+- name: Add Brave apt repo and key
+  become: true
+  connection: local
+  block:
+    - name: Adding the brave repo key
+      ansible.builtin.get_url:
+        url: https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+        dest: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+        mode: "0755"
+
+    - name: Adding the brave repo
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"
+        state: present
+
+- name: Download rust install and install
+  connection: local
+  block:
+    - name: Check if cargo is installed
+      ansible.builtin.shell: cargo
+      register: cargo_output
+      ignore_errors: true
+
+    - name: Download rust installer
+      when: cargo_output is failed
+      ansible.builtin.get_url:
+        url: https://sh.rustup.rs
+        dest: /tmp/sh.rustup.rs
+        mode: "0755"
+        force: true
+
+    - name: Install rust from the installer
+      when: cargo_output is failed
+      ansible.builtin.shell: /tmp/sh.rustup.rs -y
+
+- name: Install packages
+  become: true
+  connection: local
+  tags: packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop: "{{ workstation_ubuntu_apt_applications }}"
+
+- name: Install stuff from pipx
+  connection: local
+  tags: packages
+  community.general.pipx:
+    name: "{{ item }}"
+  loop: "{{ workstation_ubuntu_pipx_applications }}"
+
+- name: Install stuff from snap
+  connection: local
+  become: true
+  community.general.snap:
+    name: "{{ workstation_ubuntu_snap_applications }}"
+
+- name: Setup Brave browser setting
+  connection: local
+  block:
+    - name: Make sure we have the policy directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ workstation_brave_browser_policy_directory }}"
+        state: directory
+        mode: "0755"
+
+    - name: Copy configs for Brave policy
+      become: true
+      ansible.builtin.copy:
+        content: "{{ workstation_brave_browser_policy_configs | to_nice_json }}"
+        dest: "{{ workstation_brave_browser_policy_directory }}/{{ workstation_user_name }}.json"
+        mode: "0755"
+
+- name: Dconf settings
+  connection: local
+  tags: dconf
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ workstation_dconf_settings }}"
