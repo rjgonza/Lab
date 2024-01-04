@@ -47,3 +47,4 @@ _test
 #######################
 *.sublime-project
 *.sublime-workspace
+settings.json
