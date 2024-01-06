@@ -1,0 +1,25 @@
+---
+
+- name: Make sure my users is on the host
+  become: true
+  user:
+    name: "{{ workstation_user_name }}"
+    comment: "{{ workstation_user_comment }}"
+
+- name: Make sure to add my public key for ssh-key auth
+  become: true
+  tags: ssh_keys
+  authorized_key:
+    user: ramon
+    key: "{{ item }}"
+    state: present
+  loop: "{{ workstation_ssh_pub_keys }}"
+
+- name: Allow my user to have passwordless sudo
+  become: true
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^{{ workstation_user_name }}"
+    line: "{{ workstation_user_name }} ALL=(ALL) NOPASSWD: ALL"
+    validate: visudo -cf %s
