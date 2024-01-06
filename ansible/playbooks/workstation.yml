@@ -1,4 +1,8 @@
 - name: Do the workstation!
   hosts: localhost
+  # vars_prompt:
+  #   - name: workstation_wireless_network_password
+  #     prompt: "wifi password"
+
   roles:
     - { role: workstation, tags: workstation }
