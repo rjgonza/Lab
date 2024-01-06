@@ -1,27 +1,12 @@
 ---
-- name: Make sure my users is on the host
-  become: true
-  user:
-    name: "{{ workstation_user_name }}"
-    comment: "{{ workstation_user_comment }}"
 
-- name: Make sure to add my public key for ssh-key auth
-  become: true
-  tags: ssh_keys
-  authorized_key:
-    user: ramon
-    key: "{{ item }}"
-    state: present
-  loop: "{{ workstation_ssh_pub_keys }}"
+- name: Add my user to the workstation
+  tags: add_user
+  ansible.builtin.import_tasks: ubuntu/add_user.yml
 
-- name: Allow my user to have passwordless sudo
-  become: true
-  lineinfile:
-    dest: /etc/sudoers
-    state: present
-    regexp: "^{{ workstation_user_name }}"
-    line: "{{ workstation_user_name }} ALL=(ALL) NOPASSWD: ALL"
-    validate: visudo -cf %s
+- name: Setup the Wifi
+  tags: wifi
+  ansible.builtin.import_tasks: ubuntu/wifi.yml
 
 # - name: Install ansible galaxy collections
 #   community.general.ansible_galaxy_install:
@@ -129,6 +114,15 @@
   ansible.builtin.package:
     name: "{{ item }}"
   loop: "{{ workstation_ubuntu_apt_applications }}"
+
+- name: Remove packages
+  become: true
+  connection: local
+  tags: packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ workstation_ubuntu_apt_remove_applications }}"
 
 - name: Install stuff from pipx
   connection: local
