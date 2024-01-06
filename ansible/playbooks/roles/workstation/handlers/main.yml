@@ -1,0 +1,4 @@
+---
+- name: Netplan apply
+  become: true
+  ansible.builtin.command: netplan apply
