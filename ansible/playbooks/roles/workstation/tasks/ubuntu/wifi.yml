@@ -1,0 +1,9 @@
+---
+
+- name: Deploy the netconfig to setup wifi
+  become: true
+  ansible.builtin.template:
+    src: etc/netplan/01-network-manager-all.yaml.j2
+    dest: /etc/netplan/01-network-manager-all.yaml
+    backup: true
+  notify: Netplan apply

@@ -12,21 +12,50 @@ workstation_brave_browser_policy_configs: "" # key/value pairs should be entered
 workstation_dconf_settings:
   - key: "/org/gnome/desktop/peripherals/touchpad/natural-scroll"
     value: "false"
-  - key: "/org/gnome/shell/ubuntu"
-    value: "['color-scheme', 'prefer-dark']"
-  - key: "/org/gnome/desktop/interface"
-    value: "['color-scheme', 'prefer-dark']"
+  - key: "/org/gnome/shell/ubuntu/color-scheme"
+    value: "'prefer-dark'"
+  - key: "/org/gnome/desktop/interface/clock-format"
+    value: "'12h'"
+  - key: "/org/gnome/shell/extensions/dash-to-dock/multi-monitor"
+    value: "false"
+  - key: "/org/gnome/desktop/interface/clock-show-weekday"
+    value: "true"
+  - key: "/org/gnome/desktop/interface/clock-show-seconds"
+    value: "true"
+  - key: "/org/gnome/shell/enabled-extensions"
+    value: "['extension-list@tu.berry', 'ubuntu-dock@ubuntu.com', 'openweather-extension@jenslody.de', 'caffeine@patapon.info']"
+  - key: "/org/gnome/shell/extensions/openweather/unit"
+    value: "'fahrenheit'"
+  - key: "/org/gnome/shell/extensions/openweather/wind-speed-unit"
+    value: "'mph'"
+  - key: "/org/gnome/shell/extensions/openweather/city"
+    value: "'40.86403616103896,-74.07195789285714>Hasbrouck Heights, Bergen County, 07604, New Jersey, United States>0'"
+  - key: "/org/gnome/shell/extensions/openweather/show-comment-in-panel"
+    value: "true"
 
 workstation_ubuntu_apt_applications:
   - build-essential # needed for rust
   - brave-browser
-  - fuse # needed for appImages
+  - chrome-gnome-shell
+  - cmake
+  - dconf-editor
+  - flatpak
+  # - fuse # needed for appImages - aot says it's not need anymore
+  # - gnome-browser-connector # Does not seem to work in 22.04
+  - gnome-control-center
+  - gnome-tweaks
+  - libxcb-cursor0 # needed for Calibre
+  - linssid
   - make # needed run the stow commands
   - netcat
   - pipx
+  - signal-desktop
   - stow
   - tmux
   - vim
+  - vlc
+
+workstation_ubuntu_apt_remove_applications:
   - wallch
 
 workstation_ubuntu_pipx_applications:
@@ -39,3 +68,10 @@ workstation_ubuntu_snap_applications:
 
 workstation_prusaSlicer_url: "https://cdn.prusa3d.com/downloads/drivers/prusa3d_linux_2_7_1.zip"
 workstation_prusaSlicer_directory: "/opt/prusaSlicer/"
+
+workstation_wireless_interface: "wlp170s0"
+workstation_wireless_network_ssid: "Gonzalez Expo Base"
+# workstation_wireless_network_password: ""
+
+workstation_rust_crates:
+  - starship

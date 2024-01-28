@@ -1,0 +1,14 @@
+---
+- name: Clone dotfile repo
+  tags: stow
+  ansible.builtin.git:
+    repo: "ssh://git@github.com/rjgonza/dotfiles.git"
+    dest: "/home/ramon/repos/dotfiles"
+    clone: true
+    update: true
+
+- name: Run stow
+  tags: stow
+  shell: "cd /home/ramon/repos/dotfiles; make install"
+  register: result
+  changed_when: false

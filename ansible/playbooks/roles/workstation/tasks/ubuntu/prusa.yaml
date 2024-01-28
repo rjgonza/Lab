@@ -1,0 +1,43 @@
+---
+- name: Download and Install PrusaSlicer
+  connection: local
+  tags: prusaSlicer
+  block:
+    - name: Check if we have the PrusaSlicer installed
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      with_fileglob: "{{ workstation_prusaSlicer_directory }}*AppImage"
+      register: prusaSlicer_output
+      ignore_errors: true
+
+    - name: Download PrusaSlicer
+      when: prusaSlicer_output.results == []
+      ansible.builtin.get_url:
+        url: "{{ workstation_prusaSlicer_url }}"
+        dest: /tmp/prusaSlicer
+        mode: "0755"
+        force: true
+
+    - name: Make sure we have the prusaSlicer directory
+      become: true
+      when: prusaSlicer_output.results == []
+      ansible.builtin.file:
+        path: "{{ workstation_prusaSlicer_directory }}"
+        state: directory
+        mode: "0755"
+
+    - name: Unpack the prusaSlicer
+      become: true
+      when: prusaSlicer_output.results == []
+      ansible.builtin.unarchive:
+        src: /tmp/prusaSlicer
+        dest: "{{ workstation_prusaSlicer_directory }}"
+        remote_src: true
+
+    - name: Change the appImage to executable
+      become: true
+      when: prusaSlicer_output is failed
+      ansible.builtin.file:
+        dest: "{{ item }}"
+        mode: "0755"
+      with_fileglob: "{{ workstation_prusaSlicer_directory }}*.AppImage"

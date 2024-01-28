@@ -13,99 +13,29 @@
 #     type: collection
 #     name:
 
-- name: Clone dotfile repo
-  tags: stow
-  ansible.builtin.git:
-    repo: "ssh://git@github.com/rjgonza/dotfiles.git"
-    dest: "/home/ramon/repos/dotfiles"
-    clone: true
-    update: true
+- name: Dotfiles
+  tags: dotfiles
+  ansible.builtin.import_tasks: ubuntu/dotfiles.yaml
 
-- name: Run stow
-  tags: stow
-  shell: "cd /home/ramon/repos/dotfiles; make install"
-  register: result
-  changed_when: false
+- name: Browser
+  tags: browser
+  ansible.builtin.import_tasks: ubuntu/browser.yaml
 
-- name: Add Brave apt repo and key
-  become: true
-  connection: local
-  block:
-    - name: Adding the brave repo key
-      ansible.builtin.get_url:
-        url: https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-        dest: /usr/share/keyrings/brave-browser-archive-keyring.gpg
-        mode: "0755"
+- name: Rust
+  tags: Rust
+  ansible.builtin.import_tasks: ubuntu/rust.yaml
 
-    - name: Adding the brave repo
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"
-        state: present
+- name: Prusaslicer
+  tags: prusaslicer
+  ansible.builtin.import_tasks: ubuntu/prusa.yaml
 
-- name: Download rust install and install
-  connection: local
-  block:
-    - name: Check if cargo is installed
-      tags: rust
-      ansible.builtin.shell: which cargo
-      register: cargo_output
-      changed_when: false
-      ignore_errors: true
+- name: Calibre
+  tags: calibre
+  ansible.builtin.import_tasks: ubuntu/calibre.yaml
 
-    - name: Download rust installer
-      when: cargo_output is failed
-      ansible.builtin.get_url:
-        url: https://sh.rustup.rs
-        dest: /tmp/sh.rustup.rs
-        mode: "0755"
-        force: true
-
-    - name: Install rust from the installer
-      when: cargo_output is failed
-      ansible.builtin.shell: /tmp/sh.rustup.rs -y
-
-- name: Download and Install PrusaSlicer
-  connection: local
-  tags: prusaSlicer
-  block:
-    - name: Check if we have the PrusaSlicer installed
-      ansible.builtin.stat:
-        path: "{{ item }}"
-      with_fileglob: "{{ workstation_prusaSlicer_directory }}*AppImage"
-      register: prusaSlicer_output
-      ignore_errors: true
-
-    - name: Download PrusaSlicer
-      when: prusaSlicer_output.results == []
-      ansible.builtin.get_url:
-        url: "{{ workstation_prusaSlicer_url }}"
-        dest: /tmp/prusaSlicer
-        mode: "0755"
-        force: true
-
-    - name: Make sure we have the prusaSlicer directory
-      become: true
-      when: prusaSlicer_output.results == []
-      ansible.builtin.file:
-        path: "{{ workstation_prusaSlicer_directory }}"
-        state: directory
-        mode: "0755"
-
-    - name: Unpack the prusaSlicer
-      become: true
-      when: prusaSlicer_output.results == []
-      ansible.builtin.unarchive:
-          src: /tmp/prusaSlicer
-          dest: "{{ workstation_prusaSlicer_directory }}"
-          remote_src: true
-
-    - name: Change the appImage to executable
-      become: true
-      when: prusaSlicer_output is failed
-      ansible.builtin.file:
-        dest: "{{ item }}"
-        mode: "0755"
-      with_fileglob: "{{ workstation_prusaSlicer_directory }}*.AppImage"
+- name: Signal
+  tags: signal
+  ansible.builtin.import_tasks: ubuntu/signal.yaml
 
 - name: Install packages
   become: true
@@ -153,6 +83,10 @@
         content: "{{ workstation_brave_browser_policy_configs | to_nice_json }}"
         dest: "{{ workstation_brave_browser_policy_directory }}/{{ workstation_user_name }}.json"
         mode: "0755"
+
+- name: Install some crates that are cool
+  ansible.builtin.command: "cargo install {{ item }} --locked"
+  loop: "{{ workstation_rust_crates }}"
 
 - name: Dconf settings
   connection: local

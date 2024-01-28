@@ -1,0 +1,23 @@
+---
+- name: Download rust install and install
+  connection: local
+  block:
+    - name: Check if calibre is installed
+      tags: rust
+      ansible.builtin.shell: which calibre
+      register: calibre_output
+      changed_when: false
+      ignore_errors: true
+
+    - name: Download calibre installer
+      when: calibre_output is failed
+      ansible.builtin.get_url:
+        url: https://download.calibre-ebook.com/linux-installer.sh
+        dest: /tmp/sh.calibre.sh
+        mode: "0755"
+        force: true
+
+    - name: Install calibre from the installer
+      when: calibre_output is failed
+      become: true
+      ansible.builtin.shell: /tmp/sh.calibre.sh

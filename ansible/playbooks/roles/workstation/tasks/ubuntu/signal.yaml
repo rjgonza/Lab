@@ -1,0 +1,19 @@
+---
+- name: Download signal desktop install and install
+  connection: local
+  block:
+    - name: Download the signal repo key
+      ansible.builtin.get_url:
+        url: https://updates.signal.org/desktop/apt/keys.asc
+        dest: "/tmp/signal_key.asc"
+        mode: "0755"
+        force: true
+
+    - name: Create the signal repo signing key
+      become: true
+      ansible.builtin.shell: "cat /tmp/signal_key.asc | gpg --dearmor > /usr/share/keyrings/signal-desktop-keyring.gpg"
+
+    - name: Adding the signal repo
+      become: true
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main"
